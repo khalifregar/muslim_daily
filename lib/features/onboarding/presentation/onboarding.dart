@@ -5,7 +5,6 @@ import 'package:muslim_daily/core/constant/const_color.dart';
 import 'package:muslim_daily/core/routes/router/app_router_path.dart';
 import 'package:muslim_daily/features/onboarding/presentation/widgets/onboarding_item_list.dart';
 import 'package:muslim_daily/widgets/button/swipe_button.dart'; 
-import 'package:muslim_daily/widgets/loading/loading_page.dart'; // Import LoadingPage
 
 class OnboardingPage extends StatefulWidget {
   const OnboardingPage({super.key});
@@ -48,7 +47,7 @@ void _finishOnboarding() {
 
   /// **Bagian Atas: Gambar Onboarding**
   Widget _buildImageCard(String imagePath, BuildContext context) {
-    double imageHeight = MediaQuery.of(context).size.height * 0.7;
+    double imageHeight = MediaQuery.of(context).size.height * 0.67;
 
     return Padding(
       padding: EdgeInsets.only(left: 12.w, right: 12.w, top: 7.h, bottom: 10.h),
