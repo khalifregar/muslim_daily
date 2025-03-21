@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:muslim_daily/features/alquran/alquran_read_page/domain/entities/surah.dart';
+import 'package:muslim_daily/features/alquran/al_quran_menu/domain/entities/surah.dart';
 
 part 'surah_dto.freezed.dart';
 part 'surah_dto.g.dart';

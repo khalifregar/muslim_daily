@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:muslim_daily/core/api/api_client.dart';
 import 'package:muslim_daily/core/routes/router/app_router.dart';
-import 'package:muslim_daily/features/alquran/alquran_read_page/data/datasources/remotes/alquran_surah_api_service.dart';
+import 'package:muslim_daily/features/alquran/al_quran_menu/data/datasources/remotes/alquran_surah_api_service.dart';
 
 class MuslimDaily extends StatelessWidget {
   const MuslimDaily({super.key});

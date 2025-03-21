@@ -36,8 +36,9 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: RoutePaths.surahRead,
       builder: (context, state) {
-        final surahData = state.extra as Map<String, dynamic>;
-        return SurahPageRead(surahData: surahData);
+        final surah = state.extra
+            as dynamic; // Ganti `dynamic` dengan tipe data yang sesuai
+        return SurahPageRead(surah: surah);
       },
     ),
   ],
