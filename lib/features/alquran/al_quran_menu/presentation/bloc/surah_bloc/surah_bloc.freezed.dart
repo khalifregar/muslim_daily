@@ -20,18 +20,21 @@ mixin _$SurahEvent {
   TResult when<TResult extends Object?>({
     required TResult Function() getSurah,
     required TResult Function(String query) searchSurah,
+    required TResult Function(List<Surah> list) setAllSurah,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? getSurah,
     TResult? Function(String query)? searchSurah,
+    TResult? Function(List<Surah> list)? setAllSurah,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? getSurah,
     TResult Function(String query)? searchSurah,
+    TResult Function(List<Surah> list)? setAllSurah,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -39,18 +42,21 @@ mixin _$SurahEvent {
   TResult map<TResult extends Object?>({
     required TResult Function(_GetSurah value) getSurah,
     required TResult Function(_SearchSurah value) searchSurah,
+    required TResult Function(_SetAllSurah value) setAllSurah,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_GetSurah value)? getSurah,
     TResult? Function(_SearchSurah value)? searchSurah,
+    TResult? Function(_SetAllSurah value)? setAllSurah,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_GetSurah value)? getSurah,
     TResult Function(_SearchSurah value)? searchSurah,
+    TResult Function(_SetAllSurah value)? setAllSurah,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -120,6 +126,7 @@ class _$GetSurahImpl implements _GetSurah {
   TResult when<TResult extends Object?>({
     required TResult Function() getSurah,
     required TResult Function(String query) searchSurah,
+    required TResult Function(List<Surah> list) setAllSurah,
   }) {
     return getSurah();
   }
@@ -129,6 +136,7 @@ class _$GetSurahImpl implements _GetSurah {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? getSurah,
     TResult? Function(String query)? searchSurah,
+    TResult? Function(List<Surah> list)? setAllSurah,
   }) {
     return getSurah?.call();
   }
@@ -138,6 +146,7 @@ class _$GetSurahImpl implements _GetSurah {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? getSurah,
     TResult Function(String query)? searchSurah,
+    TResult Function(List<Surah> list)? setAllSurah,
     required TResult orElse(),
   }) {
     if (getSurah != null) {
@@ -151,6 +160,7 @@ class _$GetSurahImpl implements _GetSurah {
   TResult map<TResult extends Object?>({
     required TResult Function(_GetSurah value) getSurah,
     required TResult Function(_SearchSurah value) searchSurah,
+    required TResult Function(_SetAllSurah value) setAllSurah,
   }) {
     return getSurah(this);
   }
@@ -160,6 +170,7 @@ class _$GetSurahImpl implements _GetSurah {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_GetSurah value)? getSurah,
     TResult? Function(_SearchSurah value)? searchSurah,
+    TResult? Function(_SetAllSurah value)? setAllSurah,
   }) {
     return getSurah?.call(this);
   }
@@ -169,6 +180,7 @@ class _$GetSurahImpl implements _GetSurah {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_GetSurah value)? getSurah,
     TResult Function(_SearchSurah value)? searchSurah,
+    TResult Function(_SetAllSurah value)? setAllSurah,
     required TResult orElse(),
   }) {
     if (getSurah != null) {
@@ -252,6 +264,7 @@ class _$SearchSurahImpl implements _SearchSurah {
   TResult when<TResult extends Object?>({
     required TResult Function() getSurah,
     required TResult Function(String query) searchSurah,
+    required TResult Function(List<Surah> list) setAllSurah,
   }) {
     return searchSurah(query);
   }
@@ -261,6 +274,7 @@ class _$SearchSurahImpl implements _SearchSurah {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? getSurah,
     TResult? Function(String query)? searchSurah,
+    TResult? Function(List<Surah> list)? setAllSurah,
   }) {
     return searchSurah?.call(query);
   }
@@ -270,6 +284,7 @@ class _$SearchSurahImpl implements _SearchSurah {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? getSurah,
     TResult Function(String query)? searchSurah,
+    TResult Function(List<Surah> list)? setAllSurah,
     required TResult orElse(),
   }) {
     if (searchSurah != null) {
@@ -283,6 +298,7 @@ class _$SearchSurahImpl implements _SearchSurah {
   TResult map<TResult extends Object?>({
     required TResult Function(_GetSurah value) getSurah,
     required TResult Function(_SearchSurah value) searchSurah,
+    required TResult Function(_SetAllSurah value) setAllSurah,
   }) {
     return searchSurah(this);
   }
@@ -292,6 +308,7 @@ class _$SearchSurahImpl implements _SearchSurah {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_GetSurah value)? getSurah,
     TResult? Function(_SearchSurah value)? searchSurah,
+    TResult? Function(_SetAllSurah value)? setAllSurah,
   }) {
     return searchSurah?.call(this);
   }
@@ -301,6 +318,7 @@ class _$SearchSurahImpl implements _SearchSurah {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_GetSurah value)? getSurah,
     TResult Function(_SearchSurah value)? searchSurah,
+    TResult Function(_SetAllSurah value)? setAllSurah,
     required TResult orElse(),
   }) {
     if (searchSurah != null) {
@@ -319,6 +337,158 @@ abstract class _SearchSurah implements SurahEvent {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$SearchSurahImplCopyWith<_$SearchSurahImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$SetAllSurahImplCopyWith<$Res> {
+  factory _$$SetAllSurahImplCopyWith(
+          _$SetAllSurahImpl value, $Res Function(_$SetAllSurahImpl) then) =
+      __$$SetAllSurahImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({List<Surah> list});
+}
+
+/// @nodoc
+class __$$SetAllSurahImplCopyWithImpl<$Res>
+    extends _$SurahEventCopyWithImpl<$Res, _$SetAllSurahImpl>
+    implements _$$SetAllSurahImplCopyWith<$Res> {
+  __$$SetAllSurahImplCopyWithImpl(
+      _$SetAllSurahImpl _value, $Res Function(_$SetAllSurahImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of SurahEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? list = null,
+  }) {
+    return _then(_$SetAllSurahImpl(
+      null == list
+          ? _value._list
+          : list // ignore: cast_nullable_to_non_nullable
+              as List<Surah>,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$SetAllSurahImpl implements _SetAllSurah {
+  const _$SetAllSurahImpl(final List<Surah> list) : _list = list;
+
+  final List<Surah> _list;
+  @override
+  List<Surah> get list {
+    if (_list is EqualUnmodifiableListView) return _list;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_list);
+  }
+
+  @override
+  String toString() {
+    return 'SurahEvent.setAllSurah(list: $list)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$SetAllSurahImpl &&
+            const DeepCollectionEquality().equals(other._list, _list));
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(_list));
+
+  /// Create a copy of SurahEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$SetAllSurahImplCopyWith<_$SetAllSurahImpl> get copyWith =>
+      __$$SetAllSurahImplCopyWithImpl<_$SetAllSurahImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() getSurah,
+    required TResult Function(String query) searchSurah,
+    required TResult Function(List<Surah> list) setAllSurah,
+  }) {
+    return setAllSurah(list);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? getSurah,
+    TResult? Function(String query)? searchSurah,
+    TResult? Function(List<Surah> list)? setAllSurah,
+  }) {
+    return setAllSurah?.call(list);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? getSurah,
+    TResult Function(String query)? searchSurah,
+    TResult Function(List<Surah> list)? setAllSurah,
+    required TResult orElse(),
+  }) {
+    if (setAllSurah != null) {
+      return setAllSurah(list);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_GetSurah value) getSurah,
+    required TResult Function(_SearchSurah value) searchSurah,
+    required TResult Function(_SetAllSurah value) setAllSurah,
+  }) {
+    return setAllSurah(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_GetSurah value)? getSurah,
+    TResult? Function(_SearchSurah value)? searchSurah,
+    TResult? Function(_SetAllSurah value)? setAllSurah,
+  }) {
+    return setAllSurah?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_GetSurah value)? getSurah,
+    TResult Function(_SearchSurah value)? searchSurah,
+    TResult Function(_SetAllSurah value)? setAllSurah,
+    required TResult orElse(),
+  }) {
+    if (setAllSurah != null) {
+      return setAllSurah(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _SetAllSurah implements SurahEvent {
+  const factory _SetAllSurah(final List<Surah> list) = _$SetAllSurahImpl;
+
+  List<Surah> get list;
+
+  /// Create a copy of SurahEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$SetAllSurahImplCopyWith<_$SetAllSurahImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
