@@ -1,4 +1,7 @@
 import 'package:get_it/get_it.dart';
+import 'package:muslim_daily/features/alquran/alquran_read_page/data/repositories/alquran_repository.dart';
+import 'package:muslim_daily/features/alquran/alquran_read_page/domain/interfaces/i_alquran_repository.dart';
+import 'package:muslim_daily/features/alquran/alquran_read_page/presentation/bloc/alquran_read_cubit/alquran_read_cubit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:muslim_daily/core/constant/api_constant.dart';
@@ -24,6 +27,12 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton<ISurahRepository>(
     () => SurahRepository(locator<ApiService>()),
   );
+
+    // ✅ Register AlquranRead Repository & Cubit
+  locator.registerLazySingleton<IAlquranRepository>(
+    () => AlquranRepository(locator<ApiService>()),
+  );
+  locator.registerLazySingleton(() => AlquranReadCubit(locator<IAlquranRepository>()));
 
   // ✅ Register Bloc & Cubit
   locator.registerLazySingleton(() => SurahCubit(locator<ISurahRepository>()));

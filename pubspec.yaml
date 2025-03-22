@@ -28,17 +28,14 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
-  flutter:
-    sdk: flutter
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.8
-  animated_bottom_navigation_bar: ^1.4.0
   animate_do: ^4.0.1
-  cached_network_image: ^3.4.1
+  animated_bottom_navigation_bar: ^1.4.0
+  audio_waveforms: ^1.3.0
   bloc: ^9.0.0
+  cached_network_image: ^3.4.1
   carousel_slider: ^5.0.0
+  cupertino_icons: ^1.0.8
+  currency_text_input_formatter: ^2.2.9
   dartz: ^0.10.1
   data_table_2: ^2.5.18
   dio: ^5.8.0+1
@@ -47,7 +44,10 @@ dependencies:
   firebase_crashlytics: ^4.3.2
   firebase_messaging: ^15.2.2
   firebase_performance: ^0.10.1+2
+  flutter:
+    sdk: flutter
   flutter_bloc: ^9.0.0
+  flutter_dotenv: ^5.2.1
   flutter_easyloading: ^3.0.5
   flutter_screenutil: ^5.9.3
   flutter_svg: ^2.0.17
@@ -55,6 +55,7 @@ dependencies:
   freezed_annotation: ^2.4.4
   get_it: ^8.0.3
   go_router: ^14.8.0
+  graphview: ^1.2.0
   iconify_flutter: ^0.0.7
   iconsax_plus: ^1.0.0
   image_cropper: ^9.0.0
@@ -62,6 +63,7 @@ dependencies:
   injectable: ^2.5.0
   intl: ^0.20.2
   json_annotation: ^4.9.0
+  just_audio: ^0.9.46
   logger: ^2.5.0
   overlay_tooltip: ^0.2.3
   package_info_plus: ^8.2.1
@@ -72,16 +74,13 @@ dependencies:
   retrofit: ^4.4.2
   rxdart: ^0.28.0
   searchfield: ^1.2.4
-  shimmer: ^3.0.0
   shared_preferences: ^2.5.2
+  shimmer: ^3.0.0
   top_snackbar_flutter: ^3.2.0
-  flutter_dotenv: ^5.2.1
-  currency_text_input_formatter: ^2.2.9
-  graphview: ^1.2.0
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
+  build_runner: ^2.4.15
+  flutter_flavorizr: ^2.2.3
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -89,8 +88,8 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^5.0.0
-  build_runner: ^2.4.15
-  flutter_flavorizr: ^2.2.3
+  flutter_test:
+    sdk: flutter
   freezed: ^2.5.8
   injectable_generator: ^2.7.0
   json_serializable: ^6.9.4
@@ -98,7 +97,6 @@ dev_dependencies:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
-
 # The following section is specific to Flutter packages.
 flutter:
 
@@ -112,13 +110,10 @@ flutter:
     - assets/images/
     - assets/videos/
     - assets/icon/
-
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
-
   # For details regarding adding assets from package dependencies, see
   # https://flutter.dev/to/asset-from-package
-
   # To add custom fonts to your application, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a
   # "family" key with the font family name, and a "fonts" key with a
