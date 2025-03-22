@@ -4,14 +4,15 @@ import 'package:flutter/foundation.dart';
 import 'package:muslim_daily/core/constant/api_constant.dart';
 import 'package:muslim_daily/core/network/api_error_interceptors.dart';
 import 'package:muslim_daily/features/alquran/al_quran_menu/data/datasources/remotes/alquran_surah_api_service.dart';
+import 'package:muslim_daily/features/alquran/alquran_read_page/data/datasource/remotes/surah_read_api_service.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 class ApiService {
   late final Dio dio;
   late final AlquranSurahApiService alquranSurahApiService;
+  late final SurahReadApiService surahReadApiService;
 
   ApiService() {
-    // ✅ Setup Dio
     final baseOptions = BaseOptions(
       baseUrl: ApiConstant.baseUrl,
       connectTimeout: const Duration(seconds: 30),
@@ -23,11 +24,10 @@ class ApiService {
       },
     );
 
-    dio = Dio(baseOptions)
-      ..interceptors.add(AppInterceptors());
+    dio = Dio(baseOptions)..interceptors.add(AppInterceptors());
 
     if (kDebugMode) {
-      dio.interceptors.add(
+      dio.interceptors.addAll([
         PrettyDioLogger(
           request: true,
           requestHeader: true,
@@ -37,16 +37,33 @@ class ApiService {
           compact: true,
           maxWidth: 100,
         ),
-      );
+        InterceptorsWrapper(
+          onResponse: (response, handler) {
+            final path = response.requestOptions.path;
+
+            // Log hanya untuk endpoint surat/{nomor}
+            if (path.contains('/surat/')) {
+              final data = response.data['data'];
+              log(
+                '[📘 SURAH] ${data['nomor']}. ${data['namaLatin']} | '
+                'Arti: ${data['arti']}',
+              );
+            }
+
+            handler.next(response);
+          },
+        ),
+      ]);
     }
 
-    // ✅ Setup Retrofit service pakai Dio ini
+    // Inisialisasi Retrofit service
     alquranSurahApiService = AlquranSurahApiService(dio);
+    surahReadApiService = SurahReadApiService(dio);
   }
 
-  /// ✅ **Tambahkan log pencarian di terminal**
+  /// Logging untuk fitur pencarian (khusus debug mode)
   void logSearch(String query, List<dynamic> result) {
-    if (query.isEmpty) return;
+    if (query.isEmpty || !kDebugMode) return;
 
     if (result.isNotEmpty) {
       log('🔍 Search "$query" berhasil, ditemukan ${result.length} hasil: ${result.map((s) => s.namaLatin).join(", ")}');

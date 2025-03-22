@@ -1,51 +1,148 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:muslim_daily/features/alquran/alquran_read_page/presentation/bloc/alquran_read_cubit/alquran_read_cubit.dart';
+import 'package:muslim_daily/features/alquran/alquran_read_page/presentation/pages/widget/receating_alquran.dart';
+import 'package:muslim_daily/injection.dart';
 
-class SurahPageRead extends StatelessWidget {
+class SurahPageRead extends StatefulWidget {
   final dynamic surah;
 
   const SurahPageRead({super.key, required this.surah});
 
   @override
+  State<SurahPageRead> createState() => _SurahPageReadState();
+}
+
+class _SurahPageReadState extends State<SurahPageRead> {
+  late final AlquranReadCubit _cubit;
+
+  @override
+  void initState() {
+    super.initState();
+    _cubit = getIt<AlquranReadCubit>();
+
+    final cached = _cubit.getCached(widget.surah.nomor);
+    if (cached != null) {
+      _cubit.emit(AlquranReadState.loadSuccess(cached));
+    } else {
+      _cubit.getSurahRead(widget.surah.nomor);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        title: Text(
-          surah.namaLatin ?? "Surah",
-          style: TextStyle(color: Colors.black, fontSize: 18.sp),
+    return BlocProvider.value(
+      value: _cubit,
+      child: Scaffold(
+        backgroundColor: Color(0xFFFAF3E0),
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          title: Text(
+            widget.surah.namaLatin ?? "Surah",
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 20.sp,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          centerTitle: true,
+          iconTheme: const IconThemeData(color: Colors.black),
         ),
-        centerTitle: true,
-        iconTheme: const IconThemeData(color: Colors.black),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            // ✅ Header abu-abu di atas (Tanpa Box Putih Lagi)
-            Container(
-              height: 250.h, // **Header lebih tinggi**
-              width: double.infinity,
-              color: Colors.grey[300], // **Warna background header**
-            ),
-
-            // ✅ Spasi setelah header
-            SizedBox(height: 20.h),
-
-            // ✅ Ayat dari Surah
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 24.w),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: 16.h),
-
-                  SizedBox(height: 500.h), // **Tambahkan konten panjang untuk uji scroll**
-                ],
+        body: BlocBuilder<AlquranReadCubit, AlquranReadState>(
+          builder: (context, state) {
+            return state.when(
+              initial: () => const SizedBox.shrink(),
+              loadInProgress: () =>
+                  const Center(child: CircularProgressIndicator()),
+              loadFailure: (f) =>
+                  Center(child: Text(f.message ?? "Gagal memuat data")),
+              loadSuccess: (surahRead) => SingleChildScrollView(
+                padding: EdgeInsets.only(bottom: 32.h),
+                child: Column(
+                  children: [
+                    RecitingAlquran(audioUrl: surahRead.audioFull['01'], surah: widget.surah,),
+                    SizedBox(height: 20.h),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16.w),
+                      child: Column(
+                        children: surahRead.ayat
+                            .map(
+                              (e) => Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: SizedBox(
+                                      width: 40.w,
+                                      height: 40.w,
+                                      child: Stack(
+                                        alignment: Alignment.center,
+                                        children: [
+                                          Image.asset(
+                                            'assets/icon/icon_ayat.png', // ganti dengan path lo
+                                            width: 40.w,
+                                            height: 40.w,
+                                            fit: BoxFit.contain,
+                                          ),
+                                          Text(
+                                            '${e.nomorAyat ?? ''}',
+                                            style: TextStyle(
+                                              fontSize: 12.sp,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(height: 6.h),
+                                  Text(
+                                    e.teksArab ?? '',
+                                    textAlign: TextAlign.right,
+                                    style: TextStyle(
+                                      fontSize: 24.sp,
+                                      fontWeight: FontWeight.bold,
+                                      height: 1.8,
+                                    ),
+                                  ),
+                                  SizedBox(height: 10.h),
+                                  Text(
+                                    e.teksLatin ?? '',
+                                    textAlign: TextAlign.right,
+                                    style: TextStyle(
+                                      fontSize: 14.sp,
+                                      fontStyle: FontStyle.italic,
+                                      color: Colors.grey[700],
+                                    ),
+                                  ),
+                                  SizedBox(height: 6.h),
+                                  Text(
+                                    e.teksIndonesia ?? '',
+                                    textAlign: TextAlign.right,
+                                    style: TextStyle(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.black87,
+                                    ),
+                                  ),
+                                  SizedBox(height: 16.h),
+                                  const Divider(
+                                      thickness: 0.5, color: Colors.grey),
+                                  SizedBox(height: 16.h),
+                                ],
+                              ),
+                            )
+                            .toList(),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            );
+          },
         ),
       ),
     );
