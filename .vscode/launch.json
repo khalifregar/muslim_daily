@@ -1,0 +1,51 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "muslim_daily (staging)",
+            "request": "launch",
+            "type": "dart",
+            "args": [
+                "--flavor",
+                "staging",
+                "-t",
+                "lib/main.staging.dart"
+            ]
+        },
+        {
+            "name": "muslim_daily (production)",
+            "request": "launch",
+            "type": "dart",
+            "args": [
+                "--flavor",
+                "production",
+                "-t",
+                "lib/main_production.dart"
+            ]
+        },
+        {
+            "name": "muslim_daily (staging - release mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release",
+            "args": [
+                "--flavor",
+                "staging",
+                "-t",
+                "lib/main_staging.dart"
+            ]
+        },
+        {
+            "name": "muslim_daily (production - release mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release",
+            "args": [
+                "--flavor",
+                "production",
+                "-t",
+                "lib/main_production.dart"
+            ]
+        }
+    ]
+}

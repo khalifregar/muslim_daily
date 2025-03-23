@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:muslim_daily/core/routes/router/app_router_path.dart';
 
 class MenuDaily extends StatelessWidget {
   const MenuDaily({Key? key}) : super(key: key);
@@ -45,8 +46,10 @@ class MenuDaily extends StatelessWidget {
               children: [
                 _buildMenuItem(
                   iconPath: "assets/icon/shaum_menu.jpg",
-                  label: "Shaum\nSunnah",
-                  onPressed: () {},
+                  label: "Doa\nDoa Harian",
+                  onPressed: () {
+                    context.push(RoutePaths.doaHarian);
+                  },
                 ),
                 _buildMenuItem(
                   iconPath: "assets/icon/sholat_menu.jpg",
