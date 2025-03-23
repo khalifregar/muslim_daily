@@ -6,4 +6,5 @@ class RoutePaths {
   static const String loadingPage = '/loading-page';
   static const String alquranPage = '/alquran-page';
   static const String surahRead = '/sura-read';
+  static const String doaHarian = '/doa-harian';
 }
