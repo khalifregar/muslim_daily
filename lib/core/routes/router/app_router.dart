@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:muslim_daily/core/routes/router/app_router_path.dart';
 import 'package:muslim_daily/features/alquran/al_quran_menu/presentation/pages/menu_alquran_page.dart';
@@ -34,14 +35,26 @@ final GoRouter appRouter = GoRouter(
       path: RoutePaths.alquranPage,
       builder: (context, state) => const MenuAlquranPage(),
     ),
-    GoRoute(
-      path: RoutePaths.surahRead,
-      builder: (context, state) {
-        final surah = state.extra
-            as dynamic; // Ganti `dynamic` dengan tipe data yang sesuai
-        return SurahPageRead(surah: surah);
+GoRoute(
+  path: RoutePaths.surahRead,
+  name: 'surahRead',
+  pageBuilder: (context, state) {
+    final surah = state.extra as dynamic; // Boleh diganti dengan tipe Surah kalau udah fix
+
+    return CustomTransitionPage(
+      key: state.pageKey,
+      child: SurahPageRead(surah: surah),
+      transitionDuration: const Duration(milliseconds: 150), // ⏱️ Cepat dan smooth
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        return FadeTransition(
+          opacity: animation,
+          child: child,
+        );
       },
-    ),
+    );
+  },
+),
+
         GoRoute(
       path: RoutePaths.doaHarian,
       builder: (context, state) => const DoaHarianPage(),

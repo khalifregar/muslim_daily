@@ -4,11 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:muslim_daily/features/alquran/al_quran_menu/presentation/pages/widgets/quotes_card.dart';
 import 'package:muslim_daily/features/alquran/al_quran_menu/presentation/pages/widgets/search_page.dart';
 import 'package:muslim_daily/features/alquran/al_quran_menu/presentation/pages/widgets/surah_list_item.dart';
-import 'package:muslim_daily/features/alquran/al_quran_menu/presentation/bloc/surah_bloc/surah_bloc.dart'
-    as bloc;
-import 'package:muslim_daily/features/alquran/al_quran_menu/presentation/bloc/surah_cubit/surah_cubit.dart'
-    as cubit;
+import 'package:muslim_daily/features/alquran/al_quran_menu/presentation/bloc/surah_bloc/surah_bloc.dart' as bloc;
+import 'package:muslim_daily/features/alquran/al_quran_menu/presentation/bloc/surah_cubit/surah_cubit.dart' as cubit;
 import 'package:muslim_daily/widgets/header_card/header_card.dart';
+import 'package:muslim_daily/widgets/loader/shimmer.dart';
 import 'package:muslim_daily/injection.dart';
 
 class MenuAlquranPage extends StatefulWidget {
@@ -24,12 +23,12 @@ class _MenuAlquranPageState extends State<MenuAlquranPage> {
   List<dynamic> allSurahList = [];
 
   Timer? _debounce;
-  final _cubit = getIt<cubit.SurahCubit>(); // ✅ Pakai instance singleton
+  final _cubit = getIt<cubit.SurahCubit>();
 
   @override
   void initState() {
     super.initState();
-    _cubit.getSurah(); // ✅ Panggil API jika belum pernah dipanggil
+    _cubit.getSurah();
   }
 
   @override
@@ -71,7 +70,6 @@ class _MenuAlquranPageState extends State<MenuAlquranPage> {
               orElse: () => false,
             );
 
-            // ✅ Tambahkan pengecekan agar data langsung terisi meskipun listener tidak terpanggil
             state.maybeWhen(
               loadSuccess: (surahList) {
                 if (surahList != null && allSurahList.isEmpty) {
@@ -90,10 +88,8 @@ class _MenuAlquranPageState extends State<MenuAlquranPage> {
                       backgroundImage: "assets/images/alquran_image.jpg",
                     ),
                     SizedBox(height: MediaQuery.of(context).size.height * 0.05),
-
                     Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 10),
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                       child: GestureDetector(
                         onTap: () {
                           Navigator.push(
@@ -110,53 +106,43 @@ class _MenuAlquranPageState extends State<MenuAlquranPage> {
                           child: TextField(
                             controller: _searchController,
                             decoration: InputDecoration(
-                              prefixIcon:
-                                  const Icon(Icons.search, color: Colors.grey),
+                              prefixIcon: const Icon(Icons.search, color: Colors.grey),
                               hintText: "Cari Surah...",
-                              hintStyle: const TextStyle(
-                                  color: Colors.grey, fontSize: 16),
+                              hintStyle: const TextStyle(color: Colors.grey, fontSize: 16),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(30),
                                 borderSide: BorderSide.none,
                               ),
                               filled: true,
                               fillColor: Colors.white,
-                              contentPadding: const EdgeInsets.symmetric(
-                                  vertical: 12, horizontal: 20),
+                              contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(30),
-                                borderSide:
-                                    BorderSide(color: Colors.grey.shade300),
+                                borderSide: BorderSide(color: Colors.grey.shade300),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(30),
-                                borderSide:
-                                    BorderSide(color: Colors.grey.shade500),
+                                borderSide: BorderSide(color: Colors.grey.shade500),
                               ),
                             ),
                           ),
                         ),
                       ),
                     ),
-
                     const SizedBox(height: 16),
-
                     Expanded(
                       child: isLoading
-                          ? const Center(child: CircularProgressIndicator())
+                          ? const SurahShimmerLoader()
                           : ValueListenableBuilder<List<dynamic>>(
                               valueListenable: filteredSurahList,
                               builder: (context, list, _) {
                                 if (list.isEmpty) {
-                                  return const Center(
-                                      child: Text("Tidak ada Surah ditemukan"));
+                                  return const Center(child: Text("Tidak ada Surah ditemukan"));
                                 }
                                 return ListView.separated(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 16),
+                                  padding: const EdgeInsets.symmetric(horizontal: 16),
                                   itemCount: list.length,
-                                  separatorBuilder: (_, __) =>
-                                      const SizedBox(height: 8),
+                                  separatorBuilder: (_, __) => const SizedBox(height: 8),
                                   itemBuilder: (context, index) {
                                     return SurahListItem(surah: list[index]);
                                   },
