@@ -1,13 +1,18 @@
-import 'package:muslim_daily/core/common/error/failure.dart';
+import 'dart:convert';
 import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:muslim_daily/core/common/error/failure.dart';
 import 'package:muslim_daily/features/doa_harian/domain/entities/doa_harian.dart';
 import 'package:muslim_daily/features/doa_harian/domain/interfaces/i_doa_harian_repository.dart';
 
 part 'doa_harian_event.dart';
 part 'doa_harian_state.dart';
 part 'doa_harian_bloc.freezed.dart';
+
+const _cacheKey = 'cached_doa_harian';
 
 @injectable
 class DoaHarianBloc extends Bloc<DoaHarianEvent, DoaHarianState> {
@@ -17,15 +22,45 @@ class DoaHarianBloc extends Bloc<DoaHarianEvent, DoaHarianState> {
       : super(const DoaHarianState.initial()) {
     on<_GetDoaHarian>((event, emit) async {
       try {
-        emit(const DoaHarianState.loadInProgress());
-        final result = await iDoaHarianRepository.getDoaHarian();
-        result.fold(
-          (l) => emit(DoaHarianState.loadFailure(l)),
-          (r) => emit(DoaHarianState.loadSuccess(
-            doaHarianList: r,
-            filteredList: r,
+        final prefs = await SharedPreferences.getInstance();
+        final cachedJson = prefs.getString(_cacheKey);
+
+        // ✅ Step 1: Load from cache if available
+        if (cachedJson != null) {
+          final List<dynamic> decoded = jsonDecode(cachedJson);
+          final List<DoaHarian> cachedList = decoded
+              .map((e) => DoaHarian.fromJson(e as Map<String, dynamic>))
+              .toList();
+
+          emit(DoaHarianState.loadSuccess(
+            doaHarianList: cachedList,
+            filteredList: cachedList,
             searchQuery: '',
-          )),
+          ));
+          return; // 🔒 Hentikan di sini, tidak fetch ulang
+        }
+
+        // 🌀 Step 2: Only show loading if no cache
+        emit(const DoaHarianState.loadInProgress());
+
+        // 🌐 Step 3: Fetch from API (once only)
+        final result = await iDoaHarianRepository.getDoaHarian();
+
+        await result.fold(
+          (l) async {
+            emit(DoaHarianState.loadFailure(l));
+          },
+          (freshData) async {
+            final encoded =
+                jsonEncode(freshData.map((e) => e.toJson()).toList());
+            await prefs.setString(_cacheKey, encoded);
+
+            emit(DoaHarianState.loadSuccess(
+              doaHarianList: freshData,
+              filteredList: freshData,
+              searchQuery: '',
+            ));
+          },
         );
       } catch (e) {
         emit(DoaHarianState.loadFailure(

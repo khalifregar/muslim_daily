@@ -41,32 +41,54 @@ class MenuDaily extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.all(10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+            child: Wrap(
+              alignment: WrapAlignment.center,
+              spacing: 24,
+              runSpacing: 24,
               children: [
                 _buildMenuItem(
                   iconPath: "assets/icon/shaum_menu.jpg",
-                  label: "Doa\nDoa Harian",
+                  label: "Doa\nHarian",
                   onPressed: () {
                     context.push(RoutePaths.doaHarian);
                   },
                 ),
                 _buildMenuItem(
                   iconPath: "assets/icon/sholat_menu.jpg",
-                  label: "Sholat\nSunnah",
+                  label: "Hadist\nShahih",
                   onPressed: () {},
                 ),
                 _buildMenuItem(
                   iconPath: "assets/icon/infaq_menu.jpg",
-                  label: "Infaq\n& Shodaqoh",
+                  label: "Kumpulan\nDzikir",
                   onPressed: () {},
                 ),
                 _buildMenuItem(
                   iconPath: "assets/icon/alquran_menu.jpg",
-                  label: "Baca\nAl'quran",
+                  label: "Baca\nAl-Qur'an",
                   onPressed: () {
                     context.push('/alquran-page');
                   },
+                ),
+                _buildMenuItem(
+                  iconPath: "assets/icon/shaum_menu.jpg",
+                  label: "Pengingat\nIbadah",
+                  onPressed: () {},
+                ),
+                _buildMenuItem(
+                  iconPath: "assets/icon/shaum_menu.jpg",
+                  label: "Jadwal\nKajian",
+                  onPressed: () {},
+                ),
+                _buildMenuItem(
+                  iconPath: "assets/icon/shaum_menu.jpg",
+                  label: "Tasbih\nDigital",
+                  onPressed: () {},
+                ),
+                _buildMenuItem(
+                  iconPath: "assets/icon/shaum_menu.jpg",
+                  label: "Arah\nKiblat",
+                  onPressed: () {},
                 ),
               ],
             ),
@@ -83,33 +105,36 @@ class MenuDaily extends StatelessWidget {
   }) {
     return GestureDetector(
       onTap: onPressed,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: 55,
-            height: 55,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              color: Colors.grey[200],
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: Image.asset(
-                iconPath,
-                width: 50,
-                height: 50,
-                fit: BoxFit.cover,
+      child: SizedBox(
+        width: 65,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 55,
+              height: 55,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                color: Colors.grey[200],
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Image.asset(
+                  iconPath,
+                  width: 50,
+                  height: 50,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            label,
-            style: const TextStyle(fontSize: 14),
-            textAlign: TextAlign.center,
-          ),
-        ],
+            const SizedBox(height: 8),
+            Text(
+              label,
+              style: const TextStyle(fontSize: 12),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
       ),
     );
   }
