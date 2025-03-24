@@ -7,7 +7,7 @@ import 'package:muslim_daily/features/alquran/al_quran_menu/presentation/pages/w
 import 'package:muslim_daily/features/alquran/al_quran_menu/presentation/bloc/surah_bloc/surah_bloc.dart' as bloc;
 import 'package:muslim_daily/features/alquran/al_quran_menu/presentation/bloc/surah_cubit/surah_cubit.dart' as cubit;
 import 'package:muslim_daily/widgets/header_card/header_card.dart';
-import 'package:muslim_daily/widgets/loader/shimmer.dart';
+import 'package:muslim_daily/widgets/loading/shimmer.dart';
 import 'package:muslim_daily/injection.dart';
 
 class MenuAlquranPage extends StatefulWidget {
