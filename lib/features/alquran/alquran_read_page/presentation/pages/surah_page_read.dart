@@ -5,7 +5,7 @@ import 'package:muslim_daily/features/alquran/alquran_read_page/domain/entities/
 import 'package:muslim_daily/features/alquran/alquran_read_page/presentation/bloc/alquran_read_cubit/alquran_read_cubit.dart';
 import 'package:muslim_daily/features/alquran/alquran_read_page/presentation/pages/widget/receating_alquran.dart';
 import 'package:muslim_daily/injection.dart';
-import 'package:muslim_daily/widgets/loader/shimmer.dart';
+import 'package:muslim_daily/widgets/loading/shimmer.dart';
 
 class SurahPageRead extends StatefulWidget {
   final dynamic surah;

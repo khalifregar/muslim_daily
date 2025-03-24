@@ -11,6 +11,7 @@ void main() async {
     flavor: 'staging',
     equranBaseUrl: 'https://equran.id/api',
     muslimApiBaseUrl: 'https://muslim-api-three.vercel.app',
+    aladhanBaseUrl: 'https://api.aladhan.com', // ✅ Tambahan di sini
   );
 
   AppConfig.initialize(config);

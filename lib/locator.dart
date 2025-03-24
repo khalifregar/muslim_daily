@@ -1,5 +1,8 @@
 import 'package:get_it/get_it.dart';
 import 'package:muslim_daily/features/doa_harian/presentation/bloc/doa_harian_cubit/doa_harian_cubit.dart';
+import 'package:muslim_daily/features/jadwal_sholat/data/repositories/jadwal_sholat_repository.dart';
+import 'package:muslim_daily/features/jadwal_sholat/domain/interfaces/i_jadwal_sholat.dart';
+import 'package:muslim_daily/features/jadwal_sholat/presentation/bloc/jadwal_sholat_cubit/jadwal_sholat_cubit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // Al-Qur'an
@@ -58,6 +61,14 @@ locator.registerLazySingleton<IDoaHarianRepository>(
 // ✅ Register Bloc dan Cubit sebagai factory (Best Practice)
 locator.registerFactory(() => DoaHarianCubit(locator<IDoaHarianRepository>()));
 locator.registerFactory(() => DoaHarianBloc(locator<IDoaHarianRepository>()));
+
+// ✅ Register Jadwal Sholat Repository
+locator.registerLazySingleton<IJadwalSholatRepository>(
+  () => JadwalSholatRepository(locator<ApiService>()),
+);
+
+// ✅ Register Cubit sebagai factory (Best Practice)
+locator.registerFactory(() => JadwalSholatCubit(locator<IJadwalSholatRepository>()));
 
 
   // ✅ Register SplashCubit

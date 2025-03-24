@@ -40,6 +40,12 @@ import 'package:muslim_daily/features/doa_harian/presentation/bloc/doa_harian_bl
     as _i410;
 import 'package:muslim_daily/features/doa_harian/presentation/bloc/doa_harian_cubit/doa_harian_cubit.dart'
     as _i795;
+import 'package:muslim_daily/features/jadwal_sholat/data/repositories/jadwal_sholat_repository.dart'
+    as _i492;
+import 'package:muslim_daily/features/jadwal_sholat/domain/interfaces/i_jadwal_sholat.dart'
+    as _i945;
+import 'package:muslim_daily/features/jadwal_sholat/presentation/bloc/jadwal_sholat_cubit/jadwal_sholat_cubit.dart'
+    as _i779;
 
 extension GetItInjectableX on _i174.GetIt {
 // initializes the registration of main-scope dependencies inside of GetIt
@@ -73,6 +79,10 @@ extension GetItInjectableX on _i174.GetIt {
         .surahReadApiService(gh<_i361.Dio>(instanceName: 'equranDio')));
     gh.lazySingleton<_i996.ISurahRepository>(
         () => _i834.SurahRepository(gh<_i703.ApiService>()));
+    gh.lazySingleton<_i945.IJadwalSholatRepository>(
+        () => _i492.JadwalSholatRepository(gh<_i703.ApiService>()));
+    gh.factory<_i779.JadwalSholatCubit>(
+        () => _i779.JadwalSholatCubit(gh<_i945.IJadwalSholatRepository>()));
     gh.factory<_i800.SurahBloc>(
         () => _i800.SurahBloc(gh<_i996.ISurahRepository>()));
     gh.factory<_i362.SurahCubit>(
