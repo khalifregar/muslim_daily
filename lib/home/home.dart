@@ -53,22 +53,27 @@ class _HomePageContentState extends State<_HomePageContent> {
               ),
 
               /// ✅ DAILY MENU & JADWAL SHOLAT OVERLAP NAIK KE HEADER
-              Transform.translate(
-                offset: Offset(0, -screenHeight * 0.15), // ⬅️ LEBIH NAIK LAGI
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16.w),
-                      child: const MenuDaily(),
-                    ),
-                    SizedBox(height: 8.h), // jarak kecil biar rapat
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16.w),
-                      child: JadwalSholatPage(key: _jadwalKey),
-                    ),
-                  ],
-                ),
-              ),
+Transform.translate(
+  offset: Offset(0, -screenHeight * 0.15),
+  child: Column(
+    children: [
+      /// ✅ Jadwal Sholat full width - dipindah ke atas
+      Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16.w),
+        child: JadwalSholatPage(key: _jadwalKey),
+      ),
+
+      SizedBox(height: 12.h),
+
+      /// ✅ MenuDaily full width
+      SizedBox(
+        width: double.infinity,
+        child: const MenuDaily(),
+      ),
+    ],
+  ),
+),
+
             ],
           ),
         ),
