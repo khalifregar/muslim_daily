@@ -6,7 +6,6 @@ import 'package:geolocator/geolocator.dart';
 import 'package:muslim_daily/features/jadwal_sholat/domain/entities/jadwal_sholat.dart';
 import 'package:muslim_daily/features/jadwal_sholat/presentation/bloc/jadwal_sholat_cubit/jadwal_sholat_cubit.dart';
 import 'package:muslim_daily/widgets/loading/jadwal_sholat_shimmer_loader.dart';
-import 'package:muslim_daily/features/jadwal_sholat/presentation/widgets/next_prayer_countdown.dart';
 
 class JadwalSholatPage extends StatefulWidget {
   const JadwalSholatPage({super.key});
@@ -23,42 +22,33 @@ class JadwalSholatPageState extends State<JadwalSholatPage> {
   @override
   void initState() {
     super.initState();
-    fetchJadwal();
+    fetchJadwalSholat();
   }
 
-  Future<void> fetchJadwal() async {
+  Future<void> fetchJadwalSholat() async {
     try {
-      LocationPermission permission = await Geolocator.checkPermission();
+      var permission = await Geolocator.checkPermission();
       if (permission == LocationPermission.denied) {
         permission = await Geolocator.requestPermission();
       }
 
-      if (permission == LocationPermission.denied ||
-          permission == LocationPermission.deniedForever) {
-        setState(() {
-          _gpsDenied = true;
-        });
+      if (permission == LocationPermission.denied || permission == LocationPermission.deniedForever) {
+        setState(() => _gpsDenied = true);
         return;
       }
 
       final position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high,
       );
-
-      setState(() {
-        _currentPosition = position;
-      });
-
       final placemarks = await placemarkFromCoordinates(
         position.latitude,
         position.longitude,
       );
 
-      if (placemarks.isNotEmpty) {
-        setState(() {
-          _currentCity = placemarks.first.locality;
-        });
-      }
+      setState(() {
+        _currentPosition = position;
+        _currentCity = placemarks.isNotEmpty ? placemarks.first.locality : null;
+      });
 
       context.read<JadwalSholatCubit>().getJadwalSholat(
             latitude: position.latitude,
@@ -66,9 +56,7 @@ class JadwalSholatPageState extends State<JadwalSholatPage> {
           );
     } catch (e) {
       debugPrint("Lokasi error: $e");
-      setState(() {
-        _gpsDenied = true;
-      });
+      setState(() => _gpsDenied = true);
     }
   }
 
@@ -80,7 +68,7 @@ class JadwalSholatPageState extends State<JadwalSholatPage> {
       builder: (context, state) {
         return state.maybeWhen(
           loadSuccess: (jadwal) => _buildJadwalCard(jadwal),
-          orElse: () => _buildLoadingCard(),
+          orElse: _buildLoadingCard,
         );
       },
     );
@@ -88,109 +76,109 @@ class JadwalSholatPageState extends State<JadwalSholatPage> {
 
   Widget _buildJadwalCard(JadwalSholat jadwal) {
     final tanggal = jadwal.date?.readable ?? '-';
-    final timezone = jadwal.meta?.timezone ?? '-';
-
-    final lat = _currentPosition?.latitude.toStringAsFixed(5);
-    final long = _currentPosition?.longitude.toStringAsFixed(5);
-    final lokasi = _currentCity ?? (lat != null && long != null ? '$lat, $long' : '-');
+    final lokasi = _currentCity ?? '-';
 
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFFFAFAFA),
-        borderRadius: BorderRadius.circular(20),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.grey.shade200, width: 1),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+            color: Colors.black.withOpacity(0.06),
+            blurRadius: 12,
+            offset: const Offset(0, 6),
           ),
         ],
-        border: Border.all(color: Colors.grey.shade300, width: 1),
       ),
-      padding: const EdgeInsets.all(20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 4),
-          const Text(
-            "Waktu Sholat Berikutnya",
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.teal),
-          ),
-          const SizedBox(height: 12),
-          NextPrayerCountdown(jadwal: jadwal),
-          const SizedBox(height: 28),
-          Container(
-            padding: const EdgeInsets.only(bottom: 6),
-            decoration: BoxDecoration(
-              border: Border(bottom: BorderSide(color: Colors.grey.shade300)),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    const Icon(Icons.calendar_today_outlined, size: 16, color: Colors.teal),
-                    const SizedBox(width: 6),
-                    Text(
-                      '$tanggal • $timezone',
-                      style: const TextStyle(fontSize: 13, color: Colors.black54),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    const Icon(Icons.location_on, color: Colors.teal, size: 18),
-                    const SizedBox(width: 4),
-                    Text(
-                      lokasi,
-                      style: const TextStyle(fontSize: 13, color: Colors.black87),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
-                )
-              ],
-            ),
-          ),
+          _buildHeader(tanggal, lokasi),
           const SizedBox(height: 20),
-          ..._buildSholatTiles(jadwal),
+          ..._buildSholatList(jadwal),
         ],
       ),
     );
   }
 
-  List<Widget> _buildSholatTiles(JadwalSholat jadwal) {
-    final List<Map<String, String?>> data = [
-      {"Subuh": jadwal.timing?.fajr},
-      {"Dzuhur": jadwal.timing?.dhuhr},
-      {"Ashar": jadwal.timing?.asr},
-      {"Maghrib": jadwal.timing?.maghrib},
-      {"Isya": jadwal.timing?.isha},
-    ];
-
-    return data.map((entry) {
-      final title = entry.keys.first;
-      final time = entry.values.first ?? '-';
-      return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  Widget _buildHeader(String tanggal, String lokasi) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
           children: [
-            Text(title, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500)),
-            Text(time, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: Colors.teal)),
+            const Icon(Icons.calendar_today_outlined, size: 16, color: Colors.teal),
+            const SizedBox(width: 6),
+            Text(
+              tanggal,
+              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.teal),
+            ),
           ],
         ),
+        Row(
+          children: [
+            const Icon(Icons.location_on_outlined, size: 16, color: Colors.teal),
+            const SizedBox(width: 6),
+            Text(
+              lokasi,
+              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.teal),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  List<Widget> _buildSholatList(JadwalSholat jadwal) {
+    final times = [
+      {'title': 'Subuh', 'time': jadwal.timing?.fajr},
+      {'title': 'Dzuhur', 'time': jadwal.timing?.dhuhr},
+      {'title': 'Ashar', 'time': jadwal.timing?.asr},
+      {'title': 'Maghrib', 'time': jadwal.timing?.maghrib},
+      {'title': 'Isya', 'time': jadwal.timing?.isha},
+    ];
+
+    return List.generate(times.length, (index) {
+      final title = times[index]['title']!;
+      final time = times[index]['time'] ?? '-';
+
+      return Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(title, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500)),
+                Text(
+                  time,
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.teal,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          if (index < times.length - 1)
+            const Divider(height: 1, thickness: 1, color: Color(0xFFE0E0E0)),
+        ],
       );
-    }).toList();
+    });
   }
 
   Widget _buildGpsErrorCard() {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       shape: RoundedRectangleBorder(
-        side: BorderSide(color: Colors.red.shade300, width: 1.5),
         borderRadius: BorderRadius.circular(12),
+        side: BorderSide(color: Colors.red.shade300, width: 1.5),
       ),
       child: const Padding(
         padding: EdgeInsets.all(16),
