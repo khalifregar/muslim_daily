@@ -1,11 +1,12 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:intl/intl.dart';
 import 'package:muslim_daily/features/jadwal_sholat/domain/entities/jadwal_sholat.dart';
 import 'package:muslim_daily/features/jadwal_sholat/presentation/bloc/jadwal_sholat_cubit/jadwal_sholat_cubit.dart';
 import 'package:muslim_daily/widgets/loading/jadwal_sholat_shimmer_loader.dart';
+import 'package:muslim_daily/features/jadwal_sholat/presentation/widgets/next_prayer_countdown.dart';
 
 class JadwalSholatPage extends StatefulWidget {
   const JadwalSholatPage({super.key});
@@ -32,7 +33,8 @@ class JadwalSholatPageState extends State<JadwalSholatPage> {
         permission = await Geolocator.requestPermission();
       }
 
-      if (permission == LocationPermission.denied || permission == LocationPermission.deniedForever) {
+      if (permission == LocationPermission.denied ||
+          permission == LocationPermission.deniedForever) {
         setState(() {
           _gpsDenied = true;
         });
@@ -47,7 +49,11 @@ class JadwalSholatPageState extends State<JadwalSholatPage> {
         _currentPosition = position;
       });
 
-      final placemarks = await placemarkFromCoordinates(position.latitude, position.longitude);
+      final placemarks = await placemarkFromCoordinates(
+        position.latitude,
+        position.longitude,
+      );
+
       if (placemarks.isNotEmpty) {
         setState(() {
           _currentCity = placemarks.first.locality;
@@ -88,66 +94,95 @@ class JadwalSholatPageState extends State<JadwalSholatPage> {
     final long = _currentPosition?.longitude.toStringAsFixed(5);
     final lokasi = _currentCity ?? (lat != null && long != null ? '$lat, $long' : '-');
 
-    final nextPrayer = _getNextPrayerCountdown(jadwal);
-
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text("Jadwal Sholat Hari Ini", style: TextStyle(fontWeight: FontWeight.bold)),
-            const SizedBox(height: 8),
-            Text('$tanggal • ($timezone)', style: const TextStyle(fontSize: 12, color: Colors.grey)),
-            Text('Lokasi saat ini: $lokasi', style: const TextStyle(fontSize: 12, color: Colors.grey)),
-            if (nextPrayer != null) ...[
-              const SizedBox(height: 12),
-              Text(
-                '⏳ $nextPrayer',
-                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.teal),
-              ),
-            ],
-            const SizedBox(height: 16),
-            _buildTile("Subuh", jadwal.timing?.fajr ?? '-'),
-            _buildTile("Dzuhur", jadwal.timing?.dhuhr ?? '-'),
-            _buildTile("Ashar", jadwal.timing?.asr ?? '-'),
-            _buildTile("Maghrib", jadwal.timing?.maghrib ?? '-'),
-            _buildTile("Isya", jadwal.timing?.isha ?? '-'),
-          ],
-        ),
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      decoration: BoxDecoration(
+        color: const Color(0xFFFAFAFA),
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+        border: Border.all(color: Colors.grey.shade300, width: 1),
+      ),
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 4),
+          const Text(
+            "Waktu Sholat Berikutnya",
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.teal),
+          ),
+          const SizedBox(height: 12),
+          NextPrayerCountdown(jadwal: jadwal),
+          const SizedBox(height: 28),
+          Container(
+            padding: const EdgeInsets.only(bottom: 6),
+            decoration: BoxDecoration(
+              border: Border(bottom: BorderSide(color: Colors.grey.shade300)),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    const Icon(Icons.calendar_today_outlined, size: 16, color: Colors.teal),
+                    const SizedBox(width: 6),
+                    Text(
+                      '$tanggal • $timezone',
+                      style: const TextStyle(fontSize: 13, color: Colors.black54),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    const Icon(Icons.location_on, color: Colors.teal, size: 18),
+                    const SizedBox(width: 4),
+                    Text(
+                      lokasi,
+                      style: const TextStyle(fontSize: 13, color: Colors.black87),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ),
+          const SizedBox(height: 20),
+          ..._buildSholatTiles(jadwal),
+        ],
       ),
     );
   }
 
-  String? _getNextPrayerCountdown(JadwalSholat jadwal) {
-    final now = DateTime.now();
-    final times = {
-      "Subuh": jadwal.timing?.fajr,
-      "Dzuhur": jadwal.timing?.dhuhr,
-      "Ashar": jadwal.timing?.asr,
-      "Maghrib": jadwal.timing?.maghrib,
-      "Isya": jadwal.timing?.isha,
-    };
+  List<Widget> _buildSholatTiles(JadwalSholat jadwal) {
+    final List<Map<String, String?>> data = [
+      {"Subuh": jadwal.timing?.fajr},
+      {"Dzuhur": jadwal.timing?.dhuhr},
+      {"Ashar": jadwal.timing?.asr},
+      {"Maghrib": jadwal.timing?.maghrib},
+      {"Isya": jadwal.timing?.isha},
+    ];
 
-    for (final entry in times.entries) {
-      final waktu = entry.value;
-      if (waktu == null) continue;
-
-      final parts = waktu.split(':');
-      if (parts.length < 2) continue;
-
-      final hour = int.tryParse(parts[0]) ?? 0;
-      final minute = int.tryParse(parts[1]) ?? 0;
-      final targetTime = DateTime(now.year, now.month, now.day, hour, minute);
-
-      if (targetTime.isAfter(now)) {
-        final durasi = targetTime.difference(now);
-        return '${entry.key} dalam ${durasi.inHours}j ${durasi.inMinutes.remainder(60)}m';
-      }
-    }
-
-    return null;
+    return data.map((entry) {
+      final title = entry.keys.first;
+      final time = entry.values.first ?? '-';
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(title, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500)),
+            Text(time, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: Colors.teal)),
+          ],
+        ),
+      );
+    }).toList();
   }
 
   Widget _buildGpsErrorCard() {
@@ -177,19 +212,6 @@ class JadwalSholatPageState extends State<JadwalSholatPage> {
       child: SizedBox(
         height: 200,
         child: JadwalSholatShimmerLoader(),
-      ),
-    );
-  }
-
-  Widget _buildTile(String title, String waktu) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(title),
-          Text(waktu),
-        ],
       ),
     );
   }
