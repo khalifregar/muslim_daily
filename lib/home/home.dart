@@ -6,6 +6,7 @@ import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:muslim_daily/features/daily_menu/presentation/pages/menu_daily.dart';
 import 'package:muslim_daily/features/jadwal_sholat/presentation/bloc/jadwal_sholat_cubit/jadwal_sholat_cubit.dart';
 import 'package:muslim_daily/features/jadwal_sholat/presentation/pages/jadwal_sholat_section.dart';
+import 'package:muslim_daily/widgets/carousel_card/carousel.dart';
 import 'package:muslim_daily/widgets/header_card/header_card.dart';
 import 'package:muslim_daily/injection.dart';
 
@@ -91,52 +92,77 @@ class _HomePageContentState extends State<_HomePageContent> {
                       SizedBox(height: 16.h),
 
                       /// ✅ CAROUSEL BANNER
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16),
+                        child: CarouselBanner(),
+                      ),
+
+                      SizedBox(height: 24.h),
+
+                      /// ✅ TITLE SECTION
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 16.w),
-                        child: CarouselSlider(
-                          options: CarouselOptions(
-                            height: 140.h,
-                            autoPlay: true,
-                            enlargeCenterPage: true,
-                            viewportFraction: 1.0,
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "Yuk, update terus...",
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black87,
+                            ),
                           ),
-                          items: _carouselImages.map((imagePath) {
-                            return ClipRRect(
-                              borderRadius: BorderRadius.circular(16.r),
-                              child: Stack(
-                                fit: StackFit.expand,
-                                children: [
-                                  Image.asset(
-                                    imagePath,
-                                    fit: BoxFit.cover,
-                                  ),
-                                  Positioned(
-                                    top: 12.h,
-                                    left: 0,
-                                    right: 0,
-                                    child: const Center(
+                        ),
+                      ),
+
+                      SizedBox(height: 12.h),
+
+                      /// ✅ BOX BESAR DENGAN CARD DI DALAMNYA
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16.w),
+                        child: Container(
+                          width: double.infinity,
+                          padding: EdgeInsets.all(12.w),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey.shade300),
+                            borderRadius: BorderRadius.circular(16.r),
+                            color: Colors.grey.shade100,
+                          ),
+                          child: Column(
+                            children: List.generate(3, (index) {
+                              return Container(
+                                margin: EdgeInsets.only(bottom: 12.h),
+                                padding: EdgeInsets.all(12.w),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(12.r),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black12,
+                                      blurRadius: 4,
+                                      offset: Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.article_outlined,
+                                        color: Colors.teal),
+                                    SizedBox(width: 12.w),
+                                    Expanded(
                                       child: Text(
-                                        "Yuk, Kita Hapalin Surah Di bulan Ramadhan",
-                                        textAlign: TextAlign.center,
+                                        "Konten update ${index + 1}",
                                         style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w600,
-                                          color: Colors.white,
-                                          shadows: [
-                                            Shadow(
-                                              color: Colors.black54,
-                                              offset: Offset(0.5, 0.5),
-                                              blurRadius: 4,
-                                            ),
-                                          ],
+                                          fontSize: 14.sp,
+                                          fontWeight: FontWeight.w500,
                                         ),
                                       ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          }).toList(),
+                                  ],
+                                ),
+                              );
+                            }),
+                          ),
                         ),
                       ),
                     ],
