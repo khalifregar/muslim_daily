@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.muslim_daily"
+    namespace = "com.muslim_daily.app"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -19,7 +19,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.muslim_daily"
+        applicationId = "com.muslim_daily.app"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
