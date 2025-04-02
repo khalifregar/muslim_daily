@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
+import 'package:muslim_daily/features/card_content/presentation/pages/card_content.page.dart';
 import 'package:muslim_daily/features/daily_menu/presentation/pages/menu_daily.dart';
 import 'package:muslim_daily/features/jadwal_sholat/presentation/bloc/jadwal_sholat_cubit/jadwal_sholat_cubit.dart';
 import 'package:muslim_daily/features/jadwal_sholat/presentation/pages/jadwal_sholat_section.dart';
@@ -118,53 +119,7 @@ class _HomePageContentState extends State<_HomePageContent> {
                       SizedBox(height: 12.h),
 
                       /// ✅ BOX BESAR DENGAN CARD DI DALAMNYA
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 16.w),
-                        child: Container(
-                          width: double.infinity,
-                          padding: EdgeInsets.all(12.w),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey.shade300),
-                            borderRadius: BorderRadius.circular(16.r),
-                            color: Colors.grey.shade100,
-                          ),
-                          child: Column(
-                            children: List.generate(3, (index) {
-                              return Container(
-                                margin: EdgeInsets.only(bottom: 12.h),
-                                padding: EdgeInsets.all(12.w),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(12.r),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black12,
-                                      blurRadius: 4,
-                                      offset: Offset(0, 2),
-                                    ),
-                                  ],
-                                ),
-                                child: Row(
-                                  children: [
-                                    Icon(Icons.article_outlined,
-                                        color: Colors.teal),
-                                    SizedBox(width: 12.w),
-                                    Expanded(
-                                      child: Text(
-                                        "Konten update ${index + 1}",
-                                        style: TextStyle(
-                                          fontSize: 14.sp,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            }),
-                          ),
-                        ),
-                      ),
+                      const CardContent(),
                     ],
                   ),
                 ),

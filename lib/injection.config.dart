@@ -32,6 +32,10 @@ import 'package:muslim_daily/features/alquran/alquran_read_page/domain/interface
     as _i73;
 import 'package:muslim_daily/features/alquran/alquran_read_page/presentation/bloc/alquran_read_cubit/alquran_read_cubit.dart'
     as _i283;
+import 'package:muslim_daily/features/auth/domain/interfaces/i_auth_repository.dart'
+    as _i504;
+import 'package:muslim_daily/features/auth/presentation/bloc/auth_cubit.dart'
+    as _i1071;
 import 'package:muslim_daily/features/doa_harian/data/repositories/doa_harian_repository.dart'
     as _i117;
 import 'package:muslim_daily/features/doa_harian/domain/interfaces/i_doa_harian_repository.dart'
@@ -73,6 +77,8 @@ extension GetItInjectableX on _i174.GetIt {
       () => networkModule.equranDio,
       instanceName: 'equranDio',
     );
+    gh.factory<_i1071.AuthCubit>(
+        () => _i1071.AuthCubit(gh<_i504.IAuthRepository>()));
     gh.lazySingleton<_i315.AlquranSurahApiService>(() => networkModule
         .alquranSurahApiService(gh<_i361.Dio>(instanceName: 'equranDio')));
     gh.lazySingleton<_i711.SurahReadApiService>(() => networkModule

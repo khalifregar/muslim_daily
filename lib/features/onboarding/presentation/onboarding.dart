@@ -23,7 +23,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
   }
 
 void _finishOnboarding() {
-  context.go(RoutePaths.loadingPage);
+  context.go(RoutePaths.login);
 }
 
 

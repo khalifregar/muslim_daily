@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "859315103493",
+    "project_id": "muslim-daily-ee206",
+    "storage_bucket": "muslim-daily-ee206.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:859315103493:android:d9a1e4bd9152d906c4f96c",
+        "android_client_info": {
+          "package_name": "com.muslim_daily.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBmk2z5nh3Dw7joCMBPAcX6PHt_XXXLPW0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,61 +1,116 @@
 import 'package:dio/dio.dart';
 
-class DeadlineExceededException extends DioError {
-  DeadlineExceededException(RequestOptions r) : super(requestOptions: r);
+/// Base class for custom Dio exceptions
+abstract class AppDioError extends DioError {
+  final String userMessage;
+  final String? devMessage;
+
+  AppDioError({
+    required RequestOptions requestOptions,
+    required this.userMessage,
+    this.devMessage,
+  }) : super(requestOptions: requestOptions);
+
   @override
-  String toString() => 'Koneksi terlalu lama. Silakan coba lagi.';
+  String toString() => userMessage;
 }
 
-class BadRequestException extends DioError {
-  BadRequestException(RequestOptions r) : super(requestOptions: r);
-  @override
-  String toString() => 'Permintaan tidak valid.';
+// Timeout / deadline
+class DeadlineExceededException extends AppDioError {
+  DeadlineExceededException(RequestOptions r)
+      : super(
+          requestOptions: r,
+          userMessage: 'Lama banget nunggu, koneksinya lelet nih.',
+          devMessage: 'Request timeout (DeadlineExceeded)',
+        );
 }
 
-class UnauthorizedException extends DioError {
-  UnauthorizedException(RequestOptions r) : super(requestOptions: r);
-  @override
-  String toString() => 'Tidak terotorisasi.';
+// 400
+class BadRequestException extends AppDioError {
+  BadRequestException(RequestOptions r)
+      : super(
+          requestOptions: r,
+          userMessage: 'Ada yang salah dari permintaan kamu, cek lagi ya!',
+          devMessage: 'Bad request (400)',
+        );
 }
 
-class TokenExpiredException extends DioError {
-  TokenExpiredException(RequestOptions r) : super(requestOptions: r);
-  @override
-  String toString() => 'Token kedaluwarsa.';
+// 401
+class UnauthorizedException extends AppDioError {
+  UnauthorizedException(RequestOptions r)
+      : super(
+          requestOptions: r,
+          userMessage: 'Kamu belum login nih. Masuk dulu ya~',
+          devMessage: 'Unauthorized (401)',
+        );
 }
 
-class ForbiddenException extends DioError {
-  ForbiddenException(RequestOptions r) : super(requestOptions: r);
-  @override
-  String toString() => 'Akses ditolak.';
+// 401 expired
+class TokenExpiredException extends AppDioError {
+  TokenExpiredException(RequestOptions r)
+      : super(
+          requestOptions: r,
+          userMessage: 'Sesi kamu udah habis. Login ulang dulu yuk!',
+          devMessage: 'Token expired (401)',
+        );
 }
 
-class NotFoundException extends DioError {
-  NotFoundException(RequestOptions r) : super(requestOptions: r);
-  @override
-  String toString() => 'Data tidak ditemukan.';
+// 403
+class ForbiddenException extends AppDioError {
+  ForbiddenException(RequestOptions r)
+      : super(
+          requestOptions: r,
+          userMessage: 'Ups! Kamu nggak boleh akses bagian ini 😅',
+          devMessage: 'Forbidden (403)',
+        );
 }
 
-class InternalServerErrorException extends DioError {
-  InternalServerErrorException(RequestOptions r) : super(requestOptions: r);
-  @override
-  String toString() => 'Kesalahan server. Coba lagi nanti.';
+// 404
+class NotFoundException extends AppDioError {
+  NotFoundException(RequestOptions r)
+      : super(
+          requestOptions: r,
+          userMessage: 'Hmm... datanya nggak ketemu nih.',
+          devMessage: 'Not Found (404)',
+        );
 }
 
-class NoInternetConnectionException extends DioError {
-  NoInternetConnectionException(RequestOptions r) : super(requestOptions: r);
-  @override
-  String toString() => 'Tidak ada koneksi internet.';
+// 500
+class InternalServerErrorException extends AppDioError {
+  InternalServerErrorException(RequestOptions r)
+      : super(
+          requestOptions: r,
+          userMessage: 'Ada yang error di server. Coba bentar lagi ya.',
+          devMessage: 'Internal Server Error (500)',
+        );
 }
 
-class BadCertificateException extends DioError {
-  BadCertificateException(RequestOptions r) : super(requestOptions: r);
-  @override
-  String toString() => 'Sertifikat tidak valid.';
+// No internet
+class NoInternetConnectionException extends AppDioError {
+  NoInternetConnectionException(RequestOptions r)
+      : super(
+          requestOptions: r,
+          userMessage: 'Kayaknya kamu lagi offline deh. Cek koneksi ya!',
+          devMessage: 'No internet',
+        );
 }
 
-class UnknownErrorException extends DioError {
-  UnknownErrorException(RequestOptions r) : super(requestOptions: r);
-  @override
-  String toString() => 'Terjadi kesalahan yang tidak diketahui.';
+// Sertifikat SSL gagal
+class BadCertificateException extends AppDioError {
+  BadCertificateException(RequestOptions r)
+      : super(
+          requestOptions: r,
+          userMessage: 'Oops! Sertifikatnya nggak valid 😬',
+          devMessage: 'Bad certificate (SSL error)',
+        );
+}
+
+// Fallback error
+class UnknownErrorException extends AppDioError {
+  UnknownErrorException(RequestOptions r)
+      : super(
+          requestOptions: r,
+          userMessage: 'Waduh, ada error aneh nih. Coba lagi ya.',
+          devMessage: 'Unknown error',
+        );
 }
